@@ -1,0 +1,522 @@
+---
+title: "Homework 1"
+author: "Botir Okhunjanov"
+date: "September 14, 2019"
+output: pdf_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+\section{QUESTION 1}
+_X_ is a Binomial(n, p) random variable. The probability mass function (pnf) of binomial distribution is 
+$$
+\begin{aligned}
+f(x, n, p)&=\binom{{n}}xp^{x}(1-p)^{n-x}\\
+\end{aligned}
+$$
+Taking an expectation from this pmf gives us:
+$$
+\begin{aligned}
+E(X)&=\sum_{x=0}^{n}x\binom{{n}}xp^{x}(1-p)^{n-x}\\
+&=\sum_{x=0}^{n}\frac{n!}{(x-1)!(n-x)!}p^{x}(1-p)^{n-x}\\
+\end{aligned}
+$$
+Rewrite _x_ and _n_ as $a=x-1$ and thus, $x=a+1$; and $b=n-1$ and thus, $n=b+1$. Also, note that x=0 disappears. Hence, 
+$$
+\begin{aligned}
+E(X)&=\sum_{a=0}^{b}\frac{(b+1)!}{a!(b-a)!}p^{a+1}(1-p)^{b-a}\\
+&=(b+1)p\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}p^{a}(1-p)^{b-a}\\
+&=np\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}p^{a}(1-p)^{b-a}\\
+\end{aligned}
+$$
+Applying the following binomial theorem: 
+$$
+\begin{aligned}
+(\alpha+\beta)^{b}=\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}\alpha^{a}(\beta)^{b-a}
+\end{aligned}
+$$
+and setting $\alpha=p$ and $\beta=1-p$ yields: 
+$$
+\begin{aligned}
+E(X)&=np\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}p^{a}(1-p)^{b-a}\\
+&=np\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}\alpha^{a}(\beta)^{b-a}\\
+&=np(\alpha+\beta)^{b}\\
+&=np(p+1-p)\\
+&=np*1\\
+&=np
+\end{aligned}
+$$
+In order to obtain the variance for the Binomial distribution, we write the variance as follows:  
+$$
+\begin{aligned}
+var(X)&=E(X-\mu)^2\\
+&=E(X^2)-E(X)^2\\
+&=E(X^2)-E(X)^2+E(X)-E(X)\\
+&=E(X(X-1))+E(X)-E(X)^2\\
+\end{aligned}
+$$
+In order to figure out $E(X(X-1))$, just as before we set $a=x-2$ and $b=n-2$ where $x=a+2$ and $n=b+2$. Thus, the expectation from the pmf becomes:  
+$$
+\begin{aligned}
+E(X(X-1))&=\sum_{x=0}^{n}x(x-1)\binom{{n}}xp^{x}(1-p)^{n-x}\\
+&=\sum_{x=0}^{n}x(x-1)\frac{n!}{x!(n-x)!}p^{x}(1-p)^{n-x}\\
+&=\sum_{x=2}^{n}\frac{n!}{(x-2)!(n-x)!}p^{x}(1-p)^{n-x}\\
+&=n(n-1)p^2\sum_{x=2}^{n}\frac{(n-2)!}{(x-2)!(n-x)!}p^{x-2}(1-p)^{n-x}\\
+&=n(n-1)p^2\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}p^{a}(1-p)^{b-a}\\
+\end{aligned}
+$$
+Applying the Binomial theorem and setting $\alpha=p$ and $\beta=1-p$ yields, we have 
+$$
+\begin{aligned}
+\sum_{a=0}^{b}\frac{b!}{a!(b-a)!}p^{a}(1-p)^{b-a}&=(\alpha+\beta)^b\\
+&=(p+(1-p))^b
+\end{aligned}
+$$
+Consequently, we have  
+$$
+\begin{aligned}
+E(X(X-1))&=n(n-1)p^2(p+(1-p))^b\\
+&=n(n-1)p^{2}1^b\\
+&=n(n-1)p^2
+\end{aligned}
+$$
+Plugging this result into our variance function along with the result from the expectation of X yields us: 
+$$
+\begin{aligned}
+var(X)&=E(X(X-1))+E(X)-E(X)^2\\
+&=n(n-1)p^2+np-(np)^2\\
+&=(np)^2-np^2+np-(np)^2\\
+&=np(1-p)
+\end{aligned}
+$$
+
+\newpage
+\section{QUESTION 2}
+
+**Part (a)**
+
+In order to derive the maximum likelihood estimates for the mean parameter $\lambda$ of an exponential distribution, we start by assuming $X_{1}$,...,$X_{n}$ ~ $Exp(\lambda)$. Given that the probability density function (pdf) of an exponential distribution is $p_{\lambda}(x)={\lambda}e^{-{\lambda}x}$, we can obtain the the log-likelihood function along with the score function are as follow: 
+$$
+\begin{aligned}
+l({\lambda}|X_{i})&= log[p_{\lambda}(X_{i})]\\
+&=log[{\lambda}e^{-{\lambda}X_{i}}]\\
+&=log{\lambda}-{\lambda}X_{i}\\
+\end{aligned}
+$$
+$$
+\begin{aligned}
+s({\lambda}|X_{i})&=\frac{\partial}{\partial{\lambda}}l({\lambda}|X_{i})\\
+&=\frac{\partial}{\partial{\lambda}}[log{\lambda}-{\lambda}X_{i}]\\
+&=\frac{1}{\lambda}-X_{i}
+\end{aligned}
+$$
+By taking a derivative with respect to $\lambda$ and setting it equal to zero gives us: 
+$$
+\begin{aligned}
+0&=\sum_{i=1}^{n}s(\widehat{\lambda}|X_{i})\\
+&=\sum_{i=1}^{n}(\frac{1}{\widehat{\lambda}}-X_{i})\\
+&=\frac{n}{\widehat{\lambda_{n}}}-\sum_{i=1}^{n}X_{i}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\frac{n}{\widehat{\lambda_{n}}}&=\sum_{i=1}^{n}X_{i}\\
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\widehat{\lambda_{n}}=\frac{n}{\sum_{i=1}^{n}X_{i}}\\
+\end{aligned}
+$$
+which results in: 
+$$
+\begin{aligned}
+\widehat{\lambda}=\frac{\sum_{i=1}^{n}X_{i}}{n}\\
+\end{aligned}
+$$
+i.e. the estimator $\lambda$ is just the reciprocal of the sample mean. 
+
+
+**Part (b)**
+
+In order to derive the maximum likelihood estimates for the mean parameter $\mu$ of a normal distribution, we start by assuming $X_{1}$,...,$X_{n}$ ~ $N(\mu, {\sigma}^2)$. Given that the pdf of a normal distribution is $p_{\mu}(x)=\frac{1}{\sqrt{2{\pi}{{\sigma}^2}}}e^{-\frac{(x-\mu)^2}{2{\sigma}^2}}$, we can obtain the the log-likelihood function as follows:
+$$
+\begin{aligned}
+l({\mu}|X_{i})&= log[p_{\mu}(X_{i})]\\
+&=log[\frac{1}{\sqrt{2{\pi}{{\sigma}^2}}}e^{-\frac{(X_{i}-\mu)^2}{2{\sigma}^2}}]\\
+&=-\frac{1}{2}[log(2\pi)+log(\sigma^2)]-\frac{(X_{i}-\mu)^2}{2{\sigma}^2}\\
+\end{aligned}
+$$
+Then the score function is
+$$
+\begin{aligned}
+s({\mu}|X_{i})&=\frac{\partial}{\partial{\mu}}l({\mu}|X_{i})\\
+&= \frac{\partial}{\partial{\mu}}\biggl(-\frac{1}{2}[log(2\pi)+log(\sigma^2)]-\frac{(X_{i}-\mu)^2}{2{\sigma}^2}\biggl)\\
+&=\frac{X_{i}-\mu}{\sigma^2}\\
+\end{aligned}
+$$
+By taking a derivative with respect to $\mu$ and setting it equal to zero gives us: 
+$$
+\begin{aligned}
+0&=\sum_{i=1}^{n}s(\widehat{\mu_{n}}|X_{i})\\
+&=\sum_{i=1}^{n}(\frac{X_{i}-\widehat\mu_{n}}{\sigma^2})\\
+&=-\frac{n\widehat\mu_{n}}{\sigma^2}+\frac{1}{\sigma^2}\sum_{i=1}^{n}X_{i}\\
+&=-n\widehat\mu_{n}+\sum_{i=1}^{n}X_{i}
+\end{aligned}
+$$
+This in turn results in 
+$$
+\begin{aligned}
+n\widehat\mu_{n}=\sum_{i=1}^{n}X_{i}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\widehat\mu_{n}=\frac{\sum_{i=1}^{n}X_{i}}{n}
+\end{aligned}
+$$
+\newpage
+\section{QUESTION 3}
+$F^-$ represents the generalized inverse of a cdf F i.e. $F^-(u)=\inf\{x; F(x)\geq u\}$. Consequently, in order to shows that following two sets are equivalent
+$$
+\begin{aligned}
+\{(u,x); F^-(u)\leq x\}=\{(u,x); F(x)\geq u\}
+\end{aligned}
+$$
+we have to prove the existence of such sets $A\subseteq{B}$ _and_ $B\subseteq{A}$ where _A_ and _B_ are $A=\{(u,x); F^-(u)\leq x\}$ and $B=\{(u,x); F(x)\geq u\}$. 
+Starting with $A\subseteq{B}$, we have 
+$$
+\begin{aligned}
+A\subseteq{B}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+(u_{1},x_{1})\in\{(u,x): F^-(u)\leq{x}\}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+F^-(u_{1})\leq{x_{1}}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+F(F^-(u_{1}))\leq{F(x_{1})}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+u_{1}\leq{F(x_{1})}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+(u_{1},x_{1})\in{B}
+\end{aligned}
+$$
+\begin {eqnarray}
+A\subseteq{B}
+\end {eqnarray}
+and thus, A can be indeed a subset of B. Likewise if we look at the case of $B\subseteq{A}$: 
+$$
+\begin{aligned}
+B\subseteq{A}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+(u_{1},x_{1})\in\{(u,x): F(x)\geq{u}\}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+F(x_{1})\geq{u_{1}}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+F^-(F(x_{1}))\leq{F^-(u_{1})}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+F^-(u_{1})\leq{x_{1}}
+\end{aligned}
+$$
+$$
+\begin{aligned}
+(u_{1},x_{1})\in{A}
+\end{aligned}
+$$
+\begin {eqnarray}
+B\subseteq{A}
+\end {eqnarray}
+and thus, B can also be indeed a subset of A. Since both (1) and (2) sets exist, this proves our initial statement. 
+
+\newpage
+\section{QUESTION 4}
+ 
+```{r}
+N=10^3
+Bin=c()
+for(j in 1:N){
+  n=3
+  p=0.25
+  U=runif(n,0,1)
+  Ber=ifelse(U<1-p,0,1)
+  Bin[j]=sum(Ber)
+}
+hist(Bin,
+     main = "Realizations of a Binomial Distribution")
+```
+
+\newpage
+\section{QUESTION 5}
+
+```{r}
+n=10^3; alpha=4; beta=1
+U=matrix(runif(n*alpha,0,1),alpha,n)   
+E=-log(U)  
+G=beta*colSums(E) 
+
+#make a function to simulate gamma's
+gamma_sim=function(n,alpha,beta){
+  if(floor(alpha)!=alpha) stop("please supply integer alpha")
+  U=matrix(runif(n*alpha,0,1),alpha,n)  
+  E=-log(U)
+  G=beta*colSums(E)  
+  return(G)
+}
+
+hist(gamma_sim(n=1000,alpha=4,beta=1),
+     col="peachpuff",
+     border="black",
+     prob = TRUE, 
+     main = "Gamma Random Deviates")
+lines(density(gamma_sim(n=1000,alpha=4,beta=1)),
+      lwd = 2,
+      col = "blue")
+```
+
+\newpage
+\section{QUESTION 6}
+Let $X ~ Gamma(\alpha, \lambda)$ and $Y ~ Gamma(\beta, \lambda)$. Consequently, the pdf's are   
+$$
+\begin{aligned}
+f(x)=\frac{1}{\lambda^{\alpha}\Gamma(\alpha)}x^{\alpha-1}e^{-x/\lambda}\\
+f(y)=\frac{1}{\lambda^{\beta}\Gamma(\beta)}y^{\beta-1}e^{-y/\lambda}
+\end{aligned}
+$$
+Applying the one-to-one transformation, let $A=\frac{X}{X+Y}$ and $B=X+Y$. Thus, 
+$$
+\begin{aligned}
+A=g_{1}(X, Y)=\frac{X}{X+Y}\\
+B=g_{2}(X, Y)=X+Y
+\end{aligned}
+$$
+Solving for $X$ and $Y$ in the above simultaneous equations, gives as the following outcomes along with Jacobian: 
+$$
+\begin{aligned}
+X=g_{1}^{-1}(A, B)=AB\\
+Y=g_{2}^{-1}(A, B)=B(1-A)\\
+J=B(1-A)+AB=B
+\end{aligned}
+$$
+The joint probability density function of _X_ and _Y_ is
+$$
+\begin{aligned}
+f_{X, Y}(x,y)=\frac{1}{\lambda^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}y^{\beta-1}e^{-(x+y)/\lambda}\\
+x>0, y>0  
+\end{aligned}
+$$
+By the transformation technique, the joint pdf of _A_ and _B_ is
+$$
+\begin{aligned}
+f_{A, B}(a,b)=\frac{1}{\lambda^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}(ab)^{\alpha-1}(b(1-a))^{\beta-1}e^{-b/\lambda}|b|\\
+0<a<1, 0<b  
+\end{aligned}
+$$
+In order to obtain the marginal distribution, we need to integrate with respect to _b_. Thus, we obtain
+$$
+\begin{aligned}
+f_{A}(a)&=\frac{1}{\lambda^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}\int_0^{\infty}{(ab)^{\alpha-1}(b(1-a))^{\beta-1}e^{-b/\lambda}|b|}db\\
+&=\frac{1}{\lambda^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}\int_0^{\infty}{b^{\alpha+\beta-1}e^{-b/\lambda}a^{\alpha-1}(1-a)^{\beta-1}}db\\
+\end{aligned}
+$$
+By letting $c=\frac{a}{\alpha}$ and $db={\lambda}dc$, $f_{A}(a)$ can be rewritten as: 
+$$
+\begin{aligned}
+f_{A}(a)=\frac{1}{\lambda^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}\int_0^{\infty}{(c\lambda)^{\alpha+\beta-1}e^{-c}a^{\alpha-1}(1-a)^{\beta-1}}{\lambda}dc\\
+0<a<1
+\end{aligned}
+$$
+By the defination of $\Gamma({\alpha}+{\beta})$, $f_{A}(a)$ is
+$$
+\begin{aligned}
+f_{A}(a)=\frac{\Gamma({\alpha}+{\beta})}{\Gamma(\beta)\Gamma(\beta)}a^{\alpha-1}(1-a)^{\beta-1}\\
+0<a<1
+\end{aligned}
+$$
+The above equation gives us the pdf of a beta distribution. Hence, this proves that Z follows the beta distribution. 
+
+In order to prove the second part of the statement, that is, independent of $X+Y ~ Gamma({\alpha}+{\beta}, \lambda)$, again we need to obtain the the marginal distribution. Let $M=X+Y$, then
+$$
+\begin{aligned}
+f_{M}(m)&=\int_0^{\infty}{\frac{\lambda^{\alpha}}{\Gamma(\alpha)}x^{\alpha-1}e^{-{\lambda}x}\frac{\lambda^{\beta}}{\Gamma(\beta)}x^{\beta-1}e^{-{\lambda}x}}dx\\
+&=\frac{\lambda^{\alpha+\beta}e^{-{\lambda}m}}{\Gamma(\alpha)\Gamma(\beta)}\int_0^{m}{x^{\alpha-1}(m-x)^{\beta-1}}dx\\
+&=\frac{\lambda^{\alpha+\beta}e^{-{\lambda}m}}{\Gamma(\alpha)\Gamma(\beta)}m^{\alpha+\beta-1}\int_0^{1}{(\frac{x}{m})^{\alpha-1}(1-\frac{x}{m})^{\beta-1}}d(x/m)\\
+&=\frac{\lambda^{\alpha+\beta}e^{-{\lambda}m}B(\alpha,\beta)}{\Gamma(\alpha)\Gamma(\beta)}m^{\alpha+\beta-1}\int_0^{1}{\frac{w^{\alpha-1}(1-w)^{\beta-1}}{B(\alpha,\beta)}}dw\\
+&=\frac{\lambda^{\alpha+\beta}}{\Gamma(\alpha+\beta)}e^{-{\lambda}m}m^{\alpha+\beta-1}
+\end{aligned}
+$$
+where $B(\alpha,\beta)=\frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$. Hence, it is independent of $X+Y ~ Gamma({\alpha}+{\beta}, \lambda)$. 
+
+\newpage
+\section{QUESTION 7}
+
+**Part (b)**
+In this part, we have to use the accept-reject method to generate a random sample of size _n_ from $X ~ Beta(c+1, c+1)$ where the instrumental variable is $Y ~ U[0,1]$. 
+As we know, a beta distribution on the unit interval, $x\in(0,1)$, has a density as follows: 
+$$
+\begin{aligned}
+f(x)=bx^n(1-x)^m
+\end{aligned}
+$$
+where the constant _b_ is the normalizing constant, 
+$$
+\begin{aligned}
+b=\bigg[{\int_0^{1}x^n(1-x)^m}dx \bigg]^{-1}
+\end{aligned}
+$$
+By considering a special case where $f(x)=bx^n(1-x)^m=b(x(1-x))^n$, we can see that similar to the uniform distribution on (0,1), $f(x)$ has a mean of 1/2 and its mass is more concentrated around the mean value rather than at 0 or 1. If we consider the uniform density where $g(x)=1$ and $x\in(0,1)$, then $\frac{f(x)}{g(x)}=f(x)$ and we can obtain $c=sup_{x}f(x)$ at $x=1/2$. Note, this results in $c=b(1/4)^n$. \newline
+Consequently, we can generate from $f(x)=b(x(1-x))^n$ 
+\newline
+
+**Step 1** Generate _U_{1}_ and _U_{2}_.
+\newline
+
+**Step 2** If $U_{2}\leq4^n(U_1(1-U_1))^n$, then set $X=U_1$; otherwise go back to 1. 
+\newline
+Note that in _any_ beta example using $g(x)=1$, we do not need to know the value of _b_ since it cancels out in the ratio $f(x)/cg(x)$.  
+
+\newpage
+\section{QUESTION 8}
+
+**Part (a)**
+```{r}
+start=proc.time()
+N=10^3; mu=3; sigma=2^(1/4)
+U1 = runif(N, min = 0, max = 1)
+U2 = runif(N, min = 0, max = 1)
+Z1 = sqrt(-2*log(U1))*cos(2*pi*U2)
+Z2 = sqrt(-2*log(U1))*sin(2*pi*U2)
+X1=mu+sigma*Z1
+X2=mu+sigma*Z2
+
+X=c(X1,X2)
+
+hist(X,
+     col="peachpuff",
+     border="black",
+     prob = TRUE, 
+     main = "Box-Mueller Transform")
+lines(density(X),
+      lwd = 2,
+      col = "blue")
+
+time=proc.time()-start
+time
+time[3]
+```
+
+
+**Part (b)**
+```{r}
+start=proc.time()
+N=10^3; mu=3; sigma=2^(1/4)
+Z1=c(); Z2=c(); its=0
+for(j in 1:N){
+  u1=runif(1,-1,1); u2=runif(1,-1,1)
+  s=u1^2+u2^2
+  if(s<1){
+    Z1[j]=sqrt(-2*log(s))*(u1/sqrt(s))  
+    Z2[j]=sqrt(-2*log(s))*(u2/sqrt(s))
+    its=its+1
+  }
+  if (its>=(N/2)){break}
+}
+Z1r=Z1[is.na(Z1)!=T]; Z2r=Z2[is.na(Z2)!=T]
+X1=mu+sigma*Z1r
+X2=mu+sigma*Z2r
+
+X=c(X1,X2)
+
+hist(X,
+     col="peachpuff",
+     border="black",
+     prob = TRUE, 
+     main = "Marsaglia's Polar Method")
+lines(density(X),
+      lwd = 2,
+      col = "blue")
+
+time=proc.time()-start
+time
+time[3]
+```
+
+
+**Part (c)**
+Since the Box-Muller transformation needed less time in comparison to the Marsaglia's polar method (see _time elapsed_ in parts (a) and (b)), we conclude that the first method is more time efficient. 
+
+\newpage
+\section{QUESTION 9}
+We let $X ~ Gamma(a, b)$. Given that the pdf's of Gamma and Exponential distributions are $\frac{\beta^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-{\beta}x}$ and ${\lambda}e^{-{\lambda}x}$, respectively we maximize the following equation: 
+$$
+\begin{aligned}
+M=max_y\frac{f(y)}{g(y)}=max_y\frac{y^{a-1}e^{-a/b}}{\Gamma(a)b^a}\frac{e^{{\lambda}y}}{\lambda}
+\end{aligned}
+$$
+Taking a partial derivative with respect to y and setting it equal to zero, we obtain:  
+$$
+\begin{aligned}
+0&=\frac{\partial}{\partial{y}}\bigg(\frac{y^{a-1}e^{-a/b}}{\Gamma(a)b^a}\frac{e^{{\lambda}y}}{\lambda}\bigg)\\
+&=\frac{\partial}{\partial{y}}\bigg((a-1)log(y)+log(\frac{e^{-a/b}}{\Gamma(a)b^a}\frac{e^{{\lambda}y}}{\lambda})+\lambda{y}-log(\lambda)\bigg)\\
+&=\frac{a-1}{y}+\lambda
+\end{aligned}
+$$
+$$
+\begin{aligned}
+y^*=\frac{1-a}{\lambda}
+\end{aligned}
+$$
+Plugging $y^*$ into our objective function yields:
+$$
+\begin{aligned}
+M(\lambda)&=\frac{y^{*{a-1}}e^{-a/b}}{\Gamma(a)b^a}\frac{e^{{\lambda}y^{*}}}{\lambda}\\
+&=\frac{(1-a)^{a-1}e^{-a/b}}{\Gamma(a)b^a}\frac{e^{1-a}}{\lambda^a}\\
+\end{aligned}
+$$
+Given that $P(Acceptance)=1/M\leq1$, then $M\geq1$ which means that $M=1$ is the only instance when the objective function is minimized. Thus, 
+$$
+\begin{aligned}
+M(\lambda)&=1=\frac{(1-a)^{a-1}e^{-a/b}}{\Gamma(a)b^a}\frac{e^{1-a}}{\lambda^a}\\
+\end{aligned}
+$$
+and solving for $\lambda$: 
+$$
+\begin{aligned}
+\lambda^a&=\frac{(1-a)^{a-1}e^{-a/b}}{\Gamma(a)b^a}{e^{1-a}}\\
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\lambda^*&=\bigg(\frac{(1-a)^{a-1}e^{-a/b}}{\Gamma(a)b^a}{e^{1-a}}\bigg)^{1/a}\\
+\end{aligned}
+$$
+where $\lambda^*$ is our optimal value of $\lambda$.
+
+
+
